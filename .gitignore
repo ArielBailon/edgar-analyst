@@ -27,8 +27,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Local vector store / data artifacts
+# Local vector store / ingested data artifacts
 *.sqlite3
 chroma_db/
-data/raw/
-data/processed/
+data/
