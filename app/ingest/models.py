@@ -12,3 +12,10 @@ class Filing(BaseModel):
     date: date
     raw_text: str
     source_url: str
+
+
+class Transcript(BaseModel):
+    company: str
+    date: date
+    raw_text: str
+    source_url: str

@@ -1,7 +1,7 @@
 # Build Plan: edgar-analyst
 
 - [x] 1. Ingest pipeline - descargar y parsear los 10-K/10-Q de 2-3 empresas desde SEC EDGAR a texto limpio
-- [ ] 2. Ingest pipeline - descargar y parsear los earnings-call transcripts públicos de esas mismas empresas
+- [x] 2. Ingest pipeline - descargar y parsear los earnings-call transcripts públicos de esas mismas empresas
 - [ ] 3. Chunking - dividir los documentos ingestados en chunks para retrieval, con metadata (empresa, tipo de filing, sección, fecha)
 - [ ] 4. Embedding + indexing - generar embeddings de los chunks y guardarlos en ChromaDB con su metadata
 - [ ] 5. Retrieval - dada una pregunta, recuperar los top-k chunks relevantes junto con su cita

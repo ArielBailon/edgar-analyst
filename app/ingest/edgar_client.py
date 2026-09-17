@@ -2,18 +2,14 @@
 
 import json
 import os
-import time
-import urllib.error
-import urllib.request
 
 from dotenv import load_dotenv
+
+from app.ingest.http_client import get_with_retry
 
 load_dotenv()
 
 SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
-REQUEST_TIMEOUT_SECONDS = 15
-MAX_ATTEMPTS = 3
-RETRY_DELAY_SECONDS = 2
 
 COMPANIES = [
     {"ticker": "AAPL", "cik": 320193, "name": "Apple Inc."},
@@ -37,17 +33,7 @@ def _user_agent() -> str:
 
 def _get(url: str) -> bytes:
     """GET a URL with the required SEC User-Agent, retrying transient network errors."""
-    request = urllib.request.Request(url, headers={"User-Agent": _user_agent()})
-    last_error: urllib.error.URLError | None = None
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        try:
-            with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
-                return response.read()
-        except urllib.error.URLError as error:
-            last_error = error
-            if attempt < MAX_ATTEMPTS:
-                time.sleep(RETRY_DELAY_SECONDS)
-    raise last_error
+    return get_with_retry(url, headers={"User-Agent": _user_agent()})
 
 
 def fetch_submissions(cik: int) -> dict:
