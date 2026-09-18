@@ -3,7 +3,7 @@
 - [x] 1. Ingest pipeline - descargar y parsear los 10-K/10-Q de 2-3 empresas desde SEC EDGAR a texto limpio
 - [x] 2. Ingest pipeline - descargar y parsear los earnings-call transcripts públicos de esas mismas empresas
 - [x] 3. Chunking - dividir los documentos ingestados en chunks para retrieval, con metadata (empresa, tipo de filing, sección, fecha)
-- [ ] 4. Embedding + indexing - generar embeddings de los chunks y guardarlos en ChromaDB con su metadata
+- [x] 4. Embedding + indexing - generar embeddings de los chunks y guardarlos en ChromaDB con su metadata
 - [ ] 5. Retrieval - dada una pregunta, recuperar los top-k chunks relevantes junto con su cita
 - [ ] 6. Answer generation - generar una respuesta fundamentada a partir de los chunks recuperados, citando filing + sección
 - [ ] 7. Refusal path - detectar y responder correctamente cuando ningún chunk recuperado soporta una respuesta
