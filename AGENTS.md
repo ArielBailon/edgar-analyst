@@ -292,15 +292,14 @@ checks do not make the Blueprint unusable.
 ## Commands
 
 Python 3.13 (pip), FastAPI + uvicorn listed in `requirements.txt`. Build-plan
-items 1-5 and 9 are shipped: ingest, chunking, embedding and indexing,
-retrieval, and the pytest suite. `app/main.py` is still empty and there is no
-CLI entry point yet (build plan item 8), so the pipelines run as module entry
-points, for example `python -m app.retrieval.retriever "<question>"`.
+items 1-9 are shipped: ingest, chunking, embedding and indexing, retrieval,
+answer generation, the refusal path, the CLI entry point, and the pytest
+suite. `app/main.py` is the CLI entry point.
 
 - Install dependencies: `pip install -r requirements.txt`
 - Run the API once it's implemented: `uvicorn app.main:app --reload`
   (http://localhost:8000)
-- CLI entry point: > TODO - not implemented yet (build plan item 8)
+- CLI entry point: `python -m app.main "<question>"`
 - Lint/format: > TODO - no tool configured yet
 - Test: `pytest`
 
