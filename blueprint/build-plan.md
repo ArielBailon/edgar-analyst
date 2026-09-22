@@ -5,7 +5,7 @@
 - [x] 3. Chunking - dividir los documentos ingestados en chunks para retrieval, con metadata (empresa, tipo de filing, sección, fecha)
 - [x] 4. Embedding + indexing - generar embeddings de los chunks y guardarlos en ChromaDB con su metadata
 - [x] 5. Retrieval - dada una pregunta, recuperar los top-k chunks relevantes junto con su cita
-- [ ] 6. Answer generation - generar una respuesta fundamentada a partir de los chunks recuperados, citando filing + sección
+- [x] 6. Answer generation - generar una respuesta fundamentada a partir de los chunks recuperados, citando filing + sección
 - [ ] 7. Refusal path - detectar y responder correctamente cuando ningún chunk recuperado soporta una respuesta
 - [ ] 8. CLI interface - hacer una pregunta desde terminal y ver la respuesta con sus citas
 - [x] 9. Tests deterministas - cobertura pytest para las funciones de ingesta, chunking y retrieval

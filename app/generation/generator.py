@@ -1,0 +1,90 @@
+"""Answer generation: turn retrieved chunks into a grounded, cited answer via Claude."""
+
+import os
+import sys
+
+import anthropic
+from dotenv import load_dotenv
+
+from app.generation.models import AnswerResult
+from app.retrieval.models import RetrievalResult
+from app.retrieval.retriever import retrieve
+
+load_dotenv()
+
+MODEL = "claude-haiku-4-5-20251001"
+MAX_TOKENS = 1024
+
+SYSTEM_PROMPT = (
+    "You are a financial analyst assistant. Answer the user's question using only "
+    "the numbered context blocks provided below the question. Each block is one "
+    "chunk of a SEC filing or earnings-call transcript.\n\n"
+    "Rules:\n"
+    "- Use only facts stated in the context blocks. Do not use outside knowledge.\n"
+    "- After every claim, cite the block(s) it came from using its marker, "
+    "for example [1] or [2][3].\n"
+    "- If the context blocks do not contain the answer, say plainly that the "
+    "provided filings and transcripts do not support an answer. Do not guess."
+)
+
+_client_handle: anthropic.Anthropic | None = None
+
+
+def _client() -> anthropic.Anthropic:
+    """Load the Anthropic client once per process; callers may generate answers in a loop."""
+    global _client_handle
+    if _client_handle is None:
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "ANTHROPIC_API_KEY is not set. Set it in .env (see .env.example)."
+            )
+        _client_handle = anthropic.Anthropic(api_key=api_key)
+    return _client_handle
+
+
+def _build_context(results: list[RetrievalResult]) -> str:
+    """Render each result as a numbered block carrying its citation and text."""
+    blocks = []
+    for i, result in enumerate(results, start=1):
+        citation = result.citation
+        blocks.append(
+            f"[{i}] {citation.company} {citation.document_type} {citation.date} "
+            f"- {citation.section}\n{result.text}"
+        )
+    return "\n\n".join(blocks)
+
+
+def generate_answer(question: str, results: list[RetrievalResult]) -> AnswerResult:
+    """Generate a grounded answer to question from the given retrieved chunks."""
+    if not question.strip():
+        raise ValueError("question must not be blank")
+    if not results:
+        raise ValueError("results must not be empty")
+
+    context = _build_context(results)
+    response = _client().messages.create(
+        model=MODEL,
+        max_tokens=MAX_TOKENS,
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": f"Question: {question}\n\nContext:\n{context}"}],
+    )
+
+    return AnswerResult(
+        answer=response.content[0].text,
+        citations=[result.citation for result in results],
+    )
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        raise SystemExit('Usage: python -m app.generation.generator "<question>"')
+
+    question = sys.argv[1]
+    answer = generate_answer(question, retrieve(question))
+
+    print(answer.answer)
+    print()
+    print("Sources:")
+    for citation in answer.citations:
+        print(f"  {citation.company} {citation.document_type} {citation.date} - {citation.section}")
