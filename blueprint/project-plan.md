@@ -58,8 +58,9 @@ básico esté sólido y evaluado.
 
 - Python + FastAPI para la capa de API.
 - ChromaDB (embebido, local) como vector store.
-- Un proveedor de LLM para generación (a definir según a qué API ya tengas
-  acceso — comúnmente OpenAI o Anthropic).
+- Anthropic (Claude) como proveedor de LLM para generación, vía el SDK
+  `anthropic` y la variable de entorno `ANTHROPIC_API_KEY` en `.env`.
+  Decidido el 2026-09-18.
 - pytest para tests deterministas.
 - Un script de eval propio y chico (no un framework pesado) que puntúe
   corrección de citas y relevancia de respuesta.

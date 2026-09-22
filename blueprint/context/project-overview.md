@@ -1,6 +1,6 @@
 # edgar-analyst - Project Overview
 
-<!-- blueprint:source-hash fb1cc35a0360d7340bba355f359195dcd128f642c2cdd57a965e3edaaa17e375 -->
+<!-- blueprint:source-hash 4c72dc27acfaa11b681a0f1bcdf509afa005381798d8a654462df76de61bebb4 -->
 
 > RAG sobre filings SEC (10-K/10-Q) y earnings-call transcripts: responde
 > preguntas en lenguaje natural con una cita fundamentada, o se rehúsa cuando
@@ -111,7 +111,8 @@ de demo en Streamlit (16), Docker + deploy básico (17).
 - **FastAPI** - capa de API; post-MVP (build plan item 15), el MVP corre solo
   por CLI
 - **ChromaDB (embebido, local)** - vector store para chunks + embeddings
-- **LLM provider** - a definir (OpenAI o Anthropic, según acceso disponible)
+- **Anthropic (Claude)** - proveedor de LLM para generación, vía el SDK
+  `anthropic` y `ANTHROPIC_API_KEY` en `.env`. Decidido el 2026-09-18.
 - **pytest** - tests deterministas de ingesta, chunking y retrieval
 - **Script de eval propio** - sin framework pesado; puntúa corrección de
   citas y relevancia
@@ -137,7 +138,8 @@ Solo local en el MVP: corre desde `venv` con comandos documentados en el
 README (item 13). Docker + deploy básico se deja para después de que el path
 de RAG funcione y los evals pasen (item 17).
 
-> TODO: proveedor de LLM y su API key/env var no están definidos todavía.
+El único secreto del proyecto vive en `.env` (gitignored): `SEC_EDGAR_USER_AGENT`
+para la fair-access policy de SEC EDGAR, y `ANTHROPIC_API_KEY` para generación.
 
 ## Open questions
 
@@ -145,6 +147,8 @@ de RAG funcione y los evals pasen (item 17).
   pone el endpoint FastAPI (item 15) en Post-MVP y UI/UX (§7) confirma que el
   MVP corre solo por CLI. Este overview trata FastAPI como capa post-MVP;
   confirma si es correcto.
-- Proveedor de LLM sin decidir (OpenAI vs Anthropic).
+- Modelo de Claude, límites de tokens y presupuesto de costo por query sin
+  definir. Item 12 registra `model`, `tokens` y `cost` por query, así que el
+  item 6 tiene que fijar un modelo concreto.
 - Deployment más allá de "local" (Docker, host, env vars) queda sin definir
   hasta el item 17.
