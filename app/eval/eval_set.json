@@ -1,0 +1,244 @@
+[
+  {
+    "question": "What does Apple's business primarily consist of, according to its 10-K?",
+    "expected_answer": "Apple designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories, and sells a variety of related services.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "10-K",
+      "section": "Item 1.    Business",
+      "date": "2025-10-31",
+      "chunk_id": "AAPL-10-K-2025-10-31-item-1-business-0"
+    }
+  },
+  {
+    "question": "Who is responsible for Apple's cybersecurity risk management, according to its 10-K?",
+    "expected_answer": "Apple's management, led by its Head of Corporate Information Security, has overall responsibility for identifying, assessing, and managing material risks from cybersecurity threats.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "10-K",
+      "section": "Item 1C.    Cybersecurity",
+      "date": "2025-10-31",
+      "chunk_id": "AAPL-10-K-2025-10-31-item-1c-cybersecurity-0"
+    }
+  },
+  {
+    "question": "How can litigation or regulatory action affect Apple's intellectual property rights, per its 10-K risk factors?",
+    "expected_answer": "Regulatory requirements, government investigations, and litigation can force Apple to withdraw from or modify products and services in certain countries, limit its ability to derive value from or enforce its intellectual property rights, and may even require Apple to share its innovations with competitors.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "10-K",
+      "section": "Item 1A.    Risk Factors",
+      "date": "2025-10-31",
+      "chunk_id": "AAPL-10-K-2025-10-31-item-1a-risk-factors-13"
+    }
+  },
+  {
+    "question": "How might AI development by Apple's suppliers affect Apple's cybersecurity risk, per its Q2 2026 10-Q?",
+    "expected_answer": "The development and deployment of artificial intelligence by Apple and its suppliers may expose Apple to additional vulnerabilities and attacks, and Apple faces a relatively greater risk of being targeted given its high profile and the value of the confidential information it holds.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "10-Q",
+      "section": "Item 1A.    Risk Factors",
+      "date": "2026-05-01",
+      "chunk_id": "AAPL-10-Q-2026-05-01-item-1a-risk-factors-7"
+    }
+  },
+  {
+    "question": "How does AI affect cyberattack risk against Apple, according to its Q2 2026 10-Q risk factors?",
+    "expected_answer": "The rapid advancement of AI significantly increases cyberattack risk: AI is being used to produce highly targeted phishing campaigns, automate the discovery or exploitation of vulnerabilities, and generate deepfake content designed to bypass authentication protocols.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "10-Q",
+      "section": "Item 1A.    Risk Factors",
+      "date": "2026-05-01",
+      "chunk_id": "AAPL-10-Q-2026-05-01-item-1a-risk-factors-6"
+    }
+  },
+  {
+    "question": "What milestone did Tim Cook mention about his own tenure at Apple during the April 30, 2026 earnings call?",
+    "expected_answer": "Tim Cook noted he had just celebrated his 28th anniversary at Apple, including 15 years as CEO, and that the call was his 89th earnings call.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "transcript",
+      "section": "Timothy D. Cook",
+      "date": "2026-04-30",
+      "chunk_id": "AAPL-transcript-2026-04-30-timothy-d-cook-0"
+    }
+  },
+  {
+    "question": "What was Apple's revenue for the quarter discussed on the July 30, 2026 earnings call, and how did it compare to the prior year?",
+    "expected_answer": "Revenue was $109.4 billion, up 16% year-over-year, a June quarter revenue record.",
+    "expected_citation": {
+      "company": "AAPL",
+      "document_type": "transcript",
+      "section": "Kevan Parekh",
+      "date": "2026-07-30",
+      "chunk_id": "AAPL-transcript-2026-07-30-kevan-parekh-0"
+    }
+  },
+  {
+    "question": "What is Microsoft's stated mission in its 10-K?",
+    "expected_answer": "Microsoft's mission is to empower every person and every organization on the planet to achieve more.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "10-K",
+      "section": "ITEM 1. BUSINESS",
+      "date": "2026-07-29",
+      "chunk_id": "MSFT-10-K-2026-07-29-item-1-business-0"
+    }
+  },
+  {
+    "question": "What kind of statements does the risk factors section of Microsoft's 10-K contain?",
+    "expected_answer": "The statements reflect Microsoft's beliefs and opinions about matters that could adversely affect the company in the future; references to past events are provided only as examples and are not a complete listing.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "10-K",
+      "section": "ITEM 1A. RISK FACTORS",
+      "date": "2026-07-29",
+      "chunk_id": "MSFT-10-K-2026-07-29-item-1a-risk-factors-0"
+    }
+  },
+  {
+    "question": "Why does Microsoft say continued innovation matters to its competitiveness, per its 10-K risk factors?",
+    "expected_answer": "Margins in many of Microsoft's businesses are low and many competitive areas evolve rapidly with changing technologies and shifting user needs; if Microsoft does not continue to innovate and provide appealing products, it may not remain competitive.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "10-K",
+      "section": "ITEM 1A. RISK FACTORS",
+      "date": "2026-07-29",
+      "chunk_id": "MSFT-10-K-2026-07-29-item-1a-risk-factors-1"
+    }
+  },
+  {
+    "question": "What initiative did Microsoft launch in response to the evolving cybersecurity threat landscape, per its 10-K?",
+    "expected_answer": "Microsoft launched the Secure Future Initiative (SFI) in November 2023 and later expanded its scope.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "10-K",
+      "section": "ITEM 1C. CYBERSECURITY",
+      "date": "2026-07-29",
+      "chunk_id": "MSFT-10-K-2026-07-29-item-1c-cybersecurity-0"
+    }
+  },
+  {
+    "question": "What competitive risk does Microsoft describe at the start of the risk factors in its Q2 2026 10-Q?",
+    "expected_answer": "Microsoft faces intense competition across all markets for its products and services, from competitors ranging in size from diversified global companies to specialized firms.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "10-Q",
+      "section": "ITEM 1A. RISK FACTORS",
+      "date": "2026-01-28",
+      "chunk_id": "MSFT-10-Q-2026-01-28-item-1a-risk-factors-0"
+    }
+  },
+  {
+    "question": "What Microsoft Cloud revenue figure did Satya Nadella report on the April 29, 2026 earnings call?",
+    "expected_answer": "Microsoft Cloud delivered $54 billion in revenue for the quarter, up 29% year over year.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "transcript",
+      "section": "Satya Nadella",
+      "date": "2026-04-29",
+      "chunk_id": "MSFT-transcript-2026-04-29-satya-nadella-0"
+    }
+  },
+  {
+    "question": "What did Amy Hood say about Microsoft's operating margins on the April 29, 2026 earnings call?",
+    "expected_answer": "Amy Hood said operating margins increased slightly year over year, to 46%.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "transcript",
+      "section": "Amy Hood",
+      "date": "2026-04-29",
+      "chunk_id": "MSFT-transcript-2026-04-29-amy-hood-1"
+    }
+  },
+  {
+    "question": "What was Microsoft's total fiscal year revenue as reported by Amy Hood on the July 29, 2026 earnings call?",
+    "expected_answer": "Microsoft delivered over $331 billion in revenue for the fiscal year, with growth accelerating to 18%.",
+    "expected_citation": {
+      "company": "MSFT",
+      "document_type": "transcript",
+      "section": "Amy Hood",
+      "date": "2026-07-29",
+      "chunk_id": "MSFT-transcript-2026-07-29-amy-hood-0"
+    }
+  },
+  {
+    "question": "What is Tesla's stated business overview focus, per its 10-K?",
+    "expected_answer": "Tesla is focused on bringing AI into the real world through products and services like Full Self-Driving (Supervised) and Robotaxi, as well as developing AI robots including Optimus.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "10-K",
+      "section": "ITEM 1. BUSINESS",
+      "date": "2026-01-29",
+      "chunk_id": "TSLA-10-K-2026-01-29-item-1-business-0"
+    }
+  },
+  {
+    "question": "What does Tesla say its future business depends on regarding autonomous driving, per its 10-K risk factors?",
+    "expected_answer": "Tesla's future business depends on development of its driver assistance and autonomous driving solutions and increasing production of mass-market vehicles including Cybercab, which requires further advances in AI and efficient manufacturing.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "10-K",
+      "section": "ITEM 1A. RISK FACTORS",
+      "date": "2026-01-29",
+      "chunk_id": "TSLA-10-K-2026-01-29-item-1a-risk-factors-1"
+    }
+  },
+  {
+    "question": "What kinds of risks does Tesla say it manages under its cybersecurity risk management program, per its 10-K?",
+    "expected_answer": "Tesla manages risks including operational risks, intellectual property theft, fraud, extortion, harm to employees or customers, and violation of data privacy or security laws.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "10-K",
+      "section": "ITEM 1C. CYBERSECURITY",
+      "date": "2026-01-29",
+      "chunk_id": "TSLA-10-K-2026-01-29-item-1c-cybersecurity-0"
+    }
+  },
+  {
+    "question": "What were Tesla's total revenues for the three months ended March 31, 2026, per its Q1 2026 10-Q?",
+    "expected_answer": "Tesla recognized total revenues of $22.39 billion, an increase of $3.05 billion compared to the same period in the prior year.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "10-Q",
+      "section": "ITEM 2. MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS",
+      "date": "2026-04-23",
+      "chunk_id": "TSLA-10-Q-2026-04-23-item-2-management-s-discussion-and-analysis-of-financial-condition-and-results-of-operations-3"
+    }
+  },
+  {
+    "question": "How many consumer vehicles did Tesla deliver in the first quarter of 2026, per its Q1 2026 10-Q?",
+    "expected_answer": "Tesla delivered approximately 358 thousand consumer vehicles through the first quarter of 2026, out of approximately 408 thousand produced.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "10-Q",
+      "section": "ITEM 2. MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS",
+      "date": "2026-04-23",
+      "chunk_id": "TSLA-10-Q-2026-04-23-item-2-management-s-discussion-and-analysis-of-financial-condition-and-results-of-operations-2"
+    }
+  },
+  {
+    "question": "What did Elon Musk say about Tesla's mission on the January 28, 2026 earnings call?",
+    "expected_answer": "Elon Musk said he updated Tesla's mission to amazing abundance, expressing optimism that continued growth of AI and robotics could lead to a future of universal high income.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "transcript",
+      "section": "Elon Musk",
+      "date": "2026-01-28",
+      "chunk_id": "TSLA-transcript-2026-01-28-elon-musk-0"
+    }
+  },
+  {
+    "question": "What delivery trend did Vaibhav Taneja describe for the second quarter of 2026 on Tesla's earnings call?",
+    "expected_answer": "Taneja described record Q2 deliveries globally, with sequential growth across the Americas, APAC, and EMEA of 60%, 27%, and 12% respectively, and Model Y setting records in several markets.",
+    "expected_citation": {
+      "company": "TSLA",
+      "document_type": "transcript",
+      "section": "Vaibhav Taneja",
+      "date": "2026-07-22",
+      "chunk_id": "TSLA-transcript-2026-07-22-vaibhav-taneja-0"
+    }
+  }
+]
