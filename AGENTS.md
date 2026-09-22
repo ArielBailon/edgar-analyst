@@ -291,9 +291,11 @@ checks do not make the Blueprint unusable.
 
 ## Commands
 
-Python (pip), FastAPI + uvicorn listed in `requirements.txt`. The project is at
-its scaffold stage: `app/main.py` is empty and no CLI entry point exists yet
-(see `blueprint/build-plan.md` item 8).
+Python 3.13 (pip), FastAPI + uvicorn listed in `requirements.txt`. Build-plan
+items 1-5 and 9 are shipped: ingest, chunking, embedding and indexing,
+retrieval, and the pytest suite. `app/main.py` is still empty and there is no
+CLI entry point yet (build plan item 8), so the pipelines run as module entry
+points, for example `python -m app.retrieval.retriever "<question>"`.
 
 - Install dependencies: `pip install -r requirements.txt`
 - Run the API once it's implemented: `uvicorn app.main:app --reload`
@@ -319,3 +321,32 @@ Browser testing is also opt-in. Run `/tests browser` or `$tests browser` to add
 or normalize a browser harness and document its exact command as `Browser
 tests`. Check and Continuous Mode can then reuse it without installing tooling
 mid-feature.
+
+### Fresh clone setup
+
+`.env`, `.venv/`, `data/`, and `chroma_db/` are gitignored, so a new machine
+starts without them. To get a clone running:
+
+1. Install Python 3.13, then `python -m venv .venv` and activate it.
+2. `pip install -r requirements.txt`
+3. Copy `.env.example` to `.env` and fill in both values. `SEC_EDGAR_USER_AGENT`
+   is required by SEC EDGAR's fair-access policy on every request;
+   `ANTHROPIC_API_KEY` is needed from build plan item 6 onward.
+4. `pytest` passes with no further setup. The suite needs no network, no
+   ingested data, and no embedding model, so it is the fastest way to confirm a
+   clone is healthy.
+
+Retrieval needs a local corpus, which is not in the repository. Regenerate it in
+this order when you need real results:
+
+```text
+python -m app.ingest.pipeline
+python -m app.ingest.transcripts_pipeline
+python -m app.chunking.pipeline
+python -m app.embedding.pipeline
+```
+
+Steps 1 and 2 hit sec.gov and fool.com. The last step downloads the
+`all-MiniLM-L6-v2` model (about 87 MB) on first run. Until the index exists,
+retrieval raises a `RuntimeError` naming the exact re-index command rather than
+returning empty results.
