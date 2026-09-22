@@ -153,6 +153,61 @@ def test_generate_answer_preserves_citation_order_across_multiple_results(monkey
     assert answer.citations == [first.citation, second.citation]
 
 
+def test_answer_question_generates_when_the_nearest_result_is_close_enough(monkeypatch):
+    fake = _install(monkeypatch, response_text="Apple discloses supply chain risk. [1]")
+    results = [_result(distance=generator.DISTANCE_THRESHOLD - 0.001)]
+    monkeypatch.setattr(generator, "retrieve", lambda question, top_k: results)
+
+    answer = generator.answer_question("What risk factors does Apple disclose?")
+
+    assert answer.answer == "Apple discloses supply chain risk. [1]"
+    assert answer.citations == [results[0].citation]
+    assert len(fake.messages.calls) == 1
+
+
+def test_answer_question_refuses_when_the_nearest_result_is_too_far(monkeypatch):
+    fake = _install(monkeypatch)
+    results = [_result(distance=generator.DISTANCE_THRESHOLD)]
+    monkeypatch.setattr(generator, "retrieve", lambda question, top_k: results)
+
+    answer = generator.answer_question("What is the capital of France?")
+
+    assert answer == AnswerResult(answer=generator.REFUSAL_MESSAGE, citations=[])
+    assert fake.messages.calls == []
+
+
+def test_answer_question_refuses_when_nothing_is_retrieved(monkeypatch):
+    fake = _install(monkeypatch)
+    monkeypatch.setattr(generator, "retrieve", lambda question, top_k: [])
+
+    answer = generator.answer_question("a question with no matching chunks")
+
+    assert answer == AnswerResult(answer=generator.REFUSAL_MESSAGE, citations=[])
+    assert fake.messages.calls == []
+
+
+def test_answer_question_passes_top_k_through_to_retrieve(monkeypatch):
+    _install(monkeypatch)
+    seen = {}
+
+    def fake_retrieve(question, top_k):
+        seen["top_k"] = top_k
+        return [_result(distance=0.1)]
+
+    monkeypatch.setattr(generator, "retrieve", fake_retrieve)
+
+    generator.answer_question("a question", top_k=3)
+
+    assert seen["top_k"] == 3
+
+
+def test_answer_question_raises_on_a_blank_question(monkeypatch):
+    _install(monkeypatch)
+
+    with pytest.raises(ValueError, match="blank"):
+        generator.answer_question("   ")
+
+
 def test_the_client_is_resolved_once_per_process(monkeypatch):
     monkeypatch.setenv(API_KEY_VAR, "sk-ant-test-key")
     created = []

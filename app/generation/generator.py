@@ -8,12 +8,17 @@ from dotenv import load_dotenv
 
 from app.generation.models import AnswerResult
 from app.retrieval.models import RetrievalResult
-from app.retrieval.retriever import retrieve
+from app.retrieval.retriever import DEFAULT_TOP_K, retrieve
 
 load_dotenv()
 
 MODEL = "claude-haiku-4-5-20251001"
 MAX_TOKENS = 1024
+DISTANCE_THRESHOLD = 1.0
+REFUSAL_MESSAGE = (
+    "The retrieved filings and transcripts do not contain information to "
+    "answer this question."
+)
 
 SYSTEM_PROMPT = (
     "You are a financial analyst assistant. Answer the user's question using only "
@@ -76,15 +81,23 @@ def generate_answer(question: str, results: list[RetrievalResult]) -> AnswerResu
     )
 
 
+def answer_question(question: str, top_k: int = DEFAULT_TOP_K) -> AnswerResult:
+    """Answer question from the local index, refusing when nothing retrieved is close enough."""
+    results = retrieve(question, top_k)
+    if not results or results[0].distance >= DISTANCE_THRESHOLD:
+        return AnswerResult(answer=REFUSAL_MESSAGE, citations=[])
+    return generate_answer(question, results)
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit('Usage: python -m app.generation.generator "<question>"')
 
-    question = sys.argv[1]
-    answer = generate_answer(question, retrieve(question))
+    answer = answer_question(sys.argv[1])
 
     print(answer.answer)
-    print()
-    print("Sources:")
-    for citation in answer.citations:
-        print(f"  {citation.company} {citation.document_type} {citation.date} - {citation.section}")
+    if answer.citations:
+        print()
+        print("Sources:")
+        for citation in answer.citations:
+            print(f"  {citation.company} {citation.document_type} {citation.date} - {citation.section}")
