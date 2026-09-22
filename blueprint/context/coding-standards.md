@@ -84,13 +84,17 @@ of the switch; the skills and `ai-interaction.md` only point back here.
   `/implement` writes the test with the step, and if a step surfaces logic the spec
   didn't foresee, add a focused test then.
 - An empty suite should fail, not pass, so "no tests ran" never looks like "passed".
-- Test files live next to source files (for example `feature.test.ts`).
+- Test files live next to source files, named `test_<module>.py` (for example
+  `app/chunking/test_chunker.py` beside `app/chunking/chunker.py`).
 - Run them via the project's test command (see Commands in `AGENTS.md`), not a
   hardcoded tool name.
 
-Stack binding (swap for yours): a TypeScript app uses Vitest, `vi.mock()` for
-external dependencies (Prisma, Clerk, etc.), and `vi.useFakeTimers()` for
-time-dependent logic; a Python app would use pytest; a Go app `go test`.
+Stack binding for this project: pytest, configured in `pytest.ini` with
+`pythonpath = .` and `testpaths = app`. Use `monkeypatch` for external dependencies
+and plain fixtures for setup. Modules that cache expensive handles in module-level
+globals (for example `_model` and `_collection_handle` in
+`app/retrieval/retriever.py`) need a fixture resetting them between tests, or a
+stale cache will make a test pass for the wrong reason.
 
 ## Browser Verification
 

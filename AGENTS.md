@@ -300,10 +300,20 @@ its scaffold stage: `app/main.py` is empty and no CLI entry point exists yet
   (http://localhost:8000)
 - CLI entry point: > TODO - not implemented yet (build plan item 8)
 - Lint/format: > TODO - no tool configured yet
+- Test: `pytest`
 
-Testing is opt-in. If this project does not already have a unit test runner, run
-`/tests` or `$tests` to add one (build plan item 9 targets pytest) and update
-this section with the real test commands.
+Unit testing is configured: pytest, with `pytest.ini` setting `pythonpath = .` and
+`testpaths = app`. Test files live next to the source they cover, named
+`test_<module>.py`. There is no watch command; pytest has no built-in watcher and no
+extra package was added for one.
+
+Because a `Test` command is now declared above, tests are the gate for
+logic-bearing build steps: a step that adds testable logic ships a passing test in
+the same reviewable diff. Build plan item 9 still owns real coverage for ingest,
+chunking, and retrieval; the current suite only proves the runner works.
+
+No `Verify` command is declared yet. Run `/ci` or `$ci` to define one and wire the
+matching GitHub check; `/tests` does not create verification or CI on its own.
 
 Browser testing is also opt-in. Run `/tests browser` or `$tests browser` to add
 or normalize a browser harness and document its exact command as `Browser
