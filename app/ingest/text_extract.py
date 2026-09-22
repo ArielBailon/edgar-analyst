@@ -31,6 +31,10 @@ _MONTH_DAY_YEAR_RE = re.compile(
     r"\b(" + "|".join(_MONTH_NAMES) + r")\.?\s+(\d{1,2}),\s+(\d{4})"
 )
 
+# Spellings the regex accepts but strptime does not: %b wants three letters and
+# %B wants the full name, so "Sept" matches above and then fails to parse.
+_MONTH_ALIASES = {"sept": "Sep"}
+
 
 class _TextCollector(HTMLParser):
     def __init__(self, container_id: str | None = None) -> None:
@@ -127,6 +131,7 @@ def parse_call_date(article_text: str) -> date:
         raise ValueError(f"Could not find a month/day/year date in: {article_text[:200]!r}")
 
     month_name, day, year = match.groups()
+    month_name = _MONTH_ALIASES.get(month_name.lower(), month_name)
     for fmt in ("%B %d %Y", "%b %d %Y"):
         try:
             return datetime.strptime(f"{month_name} {day} {year}", fmt).date()

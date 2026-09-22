@@ -99,25 +99,26 @@ def test_extract_article_text_returns_empty_when_container_is_absent():
         ("Thursday, July 30, 2026 at 5:00 p.m. ET", date(2026, 7, 30)),
         ("Oct. 23, 2024, 5:30 p.m. ET", date(2024, 10, 23)),
         ("DATE\nMay 1, 2025", date(2025, 5, 1)),
+        ("Sept. 9, 2025, 4:00 p.m. ET", date(2025, 9, 9)),
+        ("Sep. 9, 2025, 4:00 p.m. ET", date(2025, 9, 9)),
+        ("September 9, 2025, 4:00 p.m. ET", date(2025, 9, 9)),
     ],
 )
 def test_parse_call_date_handles_observed_formats(article_text, expected):
     assert parse_call_date(article_text) == expected
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "Known defect: _MONTH_NAMES lists 'Sept', so the regex matches 'Sept. 9, 2025', "
-        "but strptime accepts only 'Sep' (%b) or 'September' (%B), so parse_call_date "
-        "raises instead of returning a date. 'Sept' is the only such token. Not "
-        "currently reachable (no ingested transcript uses it) but a September call "
-        "formatted this way would crash transcripts_pipeline. Remove this marker when "
-        "the defect is fixed; strict=True makes the suite fail if it starts passing."
-    ),
-)
-def test_parse_call_date_handles_sept_abbreviation():
+def test_parse_call_date_normalizes_the_sept_abbreviation():
+    """The regex accepts 'Sept' but strptime does not, so it is aliased onto 'Sep'."""
     assert parse_call_date("Sept. 9, 2025, 4:00 p.m. ET") == date(2025, 9, 9)
+
+
+@pytest.mark.parametrize("spelling", ["sept", "SEPT", "september"])
+def test_parse_call_date_stays_case_sensitive(spelling):
+    """Month matching is deliberately case-sensitive: 'May' and 'March' are ordinary
+    English words, so an IGNORECASE regex would match them in running prose."""
+    with pytest.raises(ValueError, match="Could not find"):
+        parse_call_date(f"{spelling} 9, 2025, 4:00 p.m. ET")
 
 
 def test_parse_call_date_takes_the_first_date_in_the_text():
