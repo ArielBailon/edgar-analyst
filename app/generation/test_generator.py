@@ -5,6 +5,7 @@ API would make the suite neither fast, deterministic, nor free.
 """
 
 from datetime import date
+from unittest.mock import Mock
 
 import pytest
 
@@ -13,6 +14,8 @@ from app.generation.models import AnswerResult
 from app.retrieval.models import Citation, RetrievalResult
 
 API_KEY_VAR = "ANTHROPIC_API_KEY"
+FAKE_INPUT_TOKENS = 1_500
+FAKE_OUTPUT_TOKENS = 200
 
 
 @pytest.fixture(autouse=True)
@@ -21,6 +24,14 @@ def _reset_client_cache():
     generator._client_handle = None
     yield
     generator._client_handle = None
+
+
+@pytest.fixture(autouse=True)
+def log_query(monkeypatch) -> Mock:
+    """No test here writes the real query log; answer_question's logging is asserted on this mock."""
+    mock = Mock()
+    monkeypatch.setattr(generator, "log_query", mock)
+    return mock
 
 
 def _result(**overrides) -> RetrievalResult:
@@ -45,9 +56,16 @@ class _FakeContentBlock:
         self.text = text
 
 
+class _FakeUsage:
+    def __init__(self) -> None:
+        self.input_tokens = FAKE_INPUT_TOKENS
+        self.output_tokens = FAKE_OUTPUT_TOKENS
+
+
 class _FakeMessage:
     def __init__(self, text: str) -> None:
         self.content = [_FakeContentBlock(text)]
+        self.usage = _FakeUsage()
 
 
 class _FakeMessages:
@@ -184,6 +202,40 @@ def test_answer_question_refuses_when_nothing_is_retrieved(monkeypatch):
 
     assert answer == AnswerResult(answer=generator.REFUSAL_MESSAGE, citations=[])
     assert fake.messages.calls == []
+
+
+def test_answer_question_logs_the_generate_path_once_with_model_and_usage(monkeypatch, log_query):
+    _install(monkeypatch)
+    results = [_result(distance=0.5)]
+    monkeypatch.setattr(generator, "retrieve", lambda question, top_k: results)
+
+    generator.answer_question("What risk factors does Apple disclose?")
+
+    log_query.assert_called_once()
+    logged = log_query.call_args.kwargs
+    assert logged["question"] == "What risk factors does Apple disclose?"
+    assert logged["retrieved_sources"] == [results[0].citation]
+    assert logged["model"] == generator.MODEL
+    assert logged["input_tokens"] == FAKE_INPUT_TOKENS
+    assert logged["output_tokens"] == FAKE_OUTPUT_TOKENS
+    assert logged["latency_ms"] >= 0
+
+
+def test_answer_question_logs_the_refusal_path_once_without_model_or_tokens(monkeypatch, log_query):
+    fake = _install(monkeypatch)
+    results = [_result(distance=generator.DISTANCE_THRESHOLD + 0.2)]
+    monkeypatch.setattr(generator, "retrieve", lambda question, top_k: results)
+
+    generator.answer_question("What is the capital of France?")
+
+    assert fake.messages.calls == []
+    log_query.assert_called_once()
+    logged = log_query.call_args.kwargs
+    assert logged["question"] == "What is the capital of France?"
+    assert logged["retrieved_sources"] == [results[0].citation]
+    assert logged["model"] == ""
+    assert logged["input_tokens"] == 0
+    assert logged["output_tokens"] == 0
 
 
 def test_answer_question_passes_top_k_through_to_retrieve(monkeypatch):

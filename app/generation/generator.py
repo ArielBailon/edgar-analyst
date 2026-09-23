@@ -2,11 +2,14 @@
 
 import os
 import sys
+import time
 
 import anthropic
+from anthropic.types import Usage
 from dotenv import load_dotenv
 
 from app.generation.models import AnswerResult
+from app.logging.query_logger import log_query
 from app.retrieval.models import RetrievalResult
 from app.retrieval.retriever import DEFAULT_TOP_K, retrieve
 
@@ -60,13 +63,8 @@ def _build_context(results: list[RetrievalResult]) -> str:
     return "\n\n".join(blocks)
 
 
-def generate_answer(question: str, results: list[RetrievalResult]) -> AnswerResult:
-    """Generate a grounded answer to question from the given retrieved chunks."""
-    if not question.strip():
-        raise ValueError("question must not be blank")
-    if not results:
-        raise ValueError("results must not be empty")
-
+def _call_claude(question: str, results: list[RetrievalResult]) -> tuple[AnswerResult, Usage]:
+    """Ask Claude for a grounded answer and return it with the response's token usage."""
     context = _build_context(results)
     response = _client().messages.create(
         model=MODEL,
@@ -75,18 +73,47 @@ def generate_answer(question: str, results: list[RetrievalResult]) -> AnswerResu
         messages=[{"role": "user", "content": f"Question: {question}\n\nContext:\n{context}"}],
     )
 
-    return AnswerResult(
+    answer = AnswerResult(
         answer=response.content[0].text,
         citations=[result.citation for result in results],
     )
+    return answer, response.usage
+
+
+def generate_answer(question: str, results: list[RetrievalResult]) -> AnswerResult:
+    """Generate a grounded answer to question from the given retrieved chunks."""
+    if not question.strip():
+        raise ValueError("question must not be blank")
+    if not results:
+        raise ValueError("results must not be empty")
+
+    answer, _ = _call_claude(question, results)
+    return answer
 
 
 def answer_question(question: str, top_k: int = DEFAULT_TOP_K) -> AnswerResult:
-    """Answer question from the local index, refusing when nothing retrieved is close enough."""
+    """Answer question from the local index, refusing when nothing retrieved is close enough.
+
+    Every answered or refused call appends one QueryLog entry.
+    """
+    start = time.perf_counter()
     results = retrieve(question, top_k)
     if not results or results[0].distance >= DISTANCE_THRESHOLD:
-        return AnswerResult(answer=REFUSAL_MESSAGE, citations=[])
-    return generate_answer(question, results)
+        answer = AnswerResult(answer=REFUSAL_MESSAGE, citations=[])
+        model, input_tokens, output_tokens = "", 0, 0
+    else:
+        answer, usage = _call_claude(question, results)
+        model, input_tokens, output_tokens = MODEL, usage.input_tokens, usage.output_tokens
+
+    log_query(
+        question=question,
+        retrieved_sources=[result.citation for result in results],
+        model=model,
+        latency_ms=round((time.perf_counter() - start) * 1000),
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+    )
+    return answer
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@
 - [x] 9. Tests deterministas - cobertura pytest para las funciones de ingesta, chunking y retrieval
 - [x] 10. Eval set - escribir 20-50 pares pregunta/respuesta etiquetados a mano con cita esperada
 - [x] 11. Eval runner - script que corre el eval set y puntúa corrección de citas y relevancia de respuesta
-- [ ] 12. Logging - logs estructurados por query (fuentes, latencia, tokens, costo) a archivo local
+- [x] 12. Logging - logs estructurados por query (fuentes, latencia, tokens, costo) a archivo local
 - [ ] 13. README - problema, usuario, setup, comandos de run/test/eval, y trade-offs documentados
 
 ## Post-MVP
