@@ -291,15 +291,17 @@ checks do not make the Blueprint unusable.
 
 ## Commands
 
-Python 3.13 (pip), FastAPI + uvicorn listed in `requirements.txt`. Build-plan
-items 1-9 are shipped: ingest, chunking, embedding and indexing, retrieval,
-answer generation, the refusal path, the CLI entry point, and the pytest
-suite. `app/main.py` is the CLI entry point.
+Python 3.13 (pip). Build-plan items 1-13, the full MVP, are shipped: ingest,
+chunking, embedding and indexing, retrieval, answer generation, the refusal path,
+the CLI entry point, the pytest suite, the eval set and runner, query logging,
+and the README. `app/main.py` is the CLI entry point. FastAPI and uvicorn are
+listed in `requirements.txt` but unused until post-MVP item 15; there is no API
+to run yet.
 
 - Install dependencies: `pip install -r requirements.txt`
-- Run the API once it's implemented: `uvicorn app.main:app --reload`
-  (http://localhost:8000)
 - CLI entry point: `python -m app.main "<question>"`
+- Eval: `python -m app.eval.runner` (needs the local index and
+  `ANTHROPIC_API_KEY`; makes real Claude calls)
 - Lint/format: > TODO - no tool configured yet
 - Test: `pytest`
 
@@ -310,8 +312,9 @@ extra package was added for one.
 
 Because a `Test` command is now declared above, tests are the gate for
 logic-bearing build steps: a step that adds testable logic ships a passing test in
-the same reviewable diff. Build plan item 9 still owns real coverage for ingest,
-chunking, and retrieval; the current suite only proves the runner works.
+the same reviewable diff. The suite covers ingest, chunking, retrieval, answer
+generation, eval scoring, and query logging, and needs no network, index, API
+key, or real log file.
 
 No `Verify` command is declared yet. Run `/ci` or `$ci` to define one and wire the
 matching GitHub check; `/tests` does not create verification or CI on its own.
@@ -330,10 +333,13 @@ starts without them. To get a clone running:
 2. `pip install -r requirements.txt`
 3. Copy `.env.example` to `.env` and fill in both values. `SEC_EDGAR_USER_AGENT`
    is required by SEC EDGAR's fair-access policy on every request;
-   `ANTHROPIC_API_KEY` is needed from build plan item 6 onward.
+   `ANTHROPIC_API_KEY` is needed to answer questions and run the eval.
 4. `pytest` passes with no further setup. The suite needs no network, no
    ingested data, and no embedding model, so it is the fastest way to confirm a
    clone is healthy.
+
+Answering a question appends one JSON line to `data/logs/queries.jsonl`, which
+the `data/` gitignore rule already excludes.
 
 Retrieval needs a local corpus, which is not in the repository. Regenerate it in
 this order when you need real results:
