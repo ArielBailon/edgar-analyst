@@ -12,7 +12,7 @@
 - [x] 10. Eval set - escribir 20-50 pares pregunta/respuesta etiquetados a mano con cita esperada
 - [x] 11. Eval runner - script que corre el eval set y puntúa corrección de citas y relevancia de respuesta
 - [x] 12. Logging - logs estructurados por query (fuentes, latencia, tokens, costo) a archivo local
-- [ ] 13. README - problema, usuario, setup, comandos de run/test/eval, y trade-offs documentados
+- [x] 13. README - problema, usuario, setup, comandos de run/test/eval, y trade-offs documentados
 
 ## Post-MVP
 - [ ] 14. Comparación de cambios de riesgo entre trimestres (quarter-over-quarter)
